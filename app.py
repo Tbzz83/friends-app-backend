@@ -14,16 +14,19 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-frontend_folder = os.path.join(os.getcwd(),"..","frontend")
-dist_folder = os.path.join(frontend_folder,"dist")
+#frontend_folder = os.path.join(os.getcwd(),"..","frontend")
+#dist_folder = os.path.join(frontend_folder,"dist")
 
 # Server static files from the "dist" folder under the "frontend" directory
-@app.route("/",defaults={"filename":""})
-@app.route("/<path:filename>")
-def index(filename):
-  if not filename:
-    filename = "index.html"
-  return send_from_directory(dist_folder,filename)
+#@app.route("/",defaults={"filename":""})
+#@app.route("/<path:filename>")
+#def index(filename):
+#  if not filename:
+#    filename = "index.html"
+#  return send_from_directory(dist_folder,filename)
+
+# Optional: Enable CORS if frontend and backend are on different domains
+CORS(app)
 
 # api routes
 import routes
@@ -32,4 +35,7 @@ with app.app_context():
   db.create_all()
 
 if __name__ == "__main__":
-  app.run(debug=True)
+  host = os.getenv("FLASK_RUN_HOST", "0.0.0.0")
+  port = int(os.getenv("FLASK_RUN_PORT", 5000))
+
+  app.run(debug=True, host=host, port=port)
