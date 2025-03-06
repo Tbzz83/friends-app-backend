@@ -1,18 +1,32 @@
 # TODO: UPDATE THIS FILE FOR DEPLOYMENT
-from flask import Flask, send_from_directory
+from flask import Flask
+from urllib.parse import quote
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from dotenv import dotenv_values
 import os
+
+# GLOBALS 
+CONFIG = dotenv_values(".env")
 
 app = Flask(__name__)
 
-# We can comment this CORS config for the production because we are running the frontend and backend on the same server
-# CORS(app) 
+CORS(app) 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///friends.db"
+# >>> SQL DB setup >>>
+
+# Must quote password if it has special characters
+sql_pw = quote(CONFIG["sql_pw"])
+
+# If using Azure SQL DB connection string sql_host_db will look like:
+sql_host_db = CONFIG["sql_host_db"]
+sql_user = CONFIG["sql_user"]
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{sql_user}:{sql_pw}@{sql_host_db}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
+# <<< SQL DB setup <<<
 
 #frontend_folder = os.path.join(os.getcwd(),"..","frontend")
 #dist_folder = os.path.join(frontend_folder,"dist")
@@ -24,9 +38,6 @@ db = SQLAlchemy(app)
 #  if not filename:
 #    filename = "index.html"
 #  return send_from_directory(dist_folder,filename)
-
-# Optional: Enable CORS if frontend and backend are on different domains
-CORS(app)
 
 # api routes
 import routes
