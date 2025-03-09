@@ -61,22 +61,6 @@ jobs:
 
       # Optional: Add a step to run tests here (PyTest, Django test suites, etc.)
 
-      - name: Create Env
-        run: | 
-          #!/bin/bash
-          touch .env
-          echo sql_pw=${{ secrets.SQL_PW }} >> .env
-          echo sql_user=${{ secrets.SQL_USER }} >> .env
-          echo sql_host_db=${{ secrets.SQL_HOST_DB}} >> .env
-
-      - name: Check .env
-        run: |
-          #!/bin/bash
-          cat .env
-          if [[ ! -f ".env" ]]; then
-              exit 1
-          fi
-
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
         with:
@@ -124,6 +108,23 @@ jobs:
           name: python-app
           path: .
 
+      - name: Create Env
+        run: | 
+          #!/bin/bash
+          touch .env
+          echo sql_pw=${{ secrets.SQL_PW }} >> .env
+          echo sql_user=${{ secrets.SQL_USER }} >> .env
+          echo sql_host_db=${{ secrets.SQL_HOST_DB}} >> .env
+
+      - name: Check .env
+        run: |
+          #!/bin/bash
+          pwd
+          ls -la
+          cat .env
+          if [[ ! -f ".env" ]]; then
+              exit 1
+          fi
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
