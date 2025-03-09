@@ -26,3 +26,6 @@ friends.db
 # Dependency directories
 node_modules/
 /dist/
+
+# Web app deployment info
+.deployment
