@@ -34,7 +34,6 @@ jobs:
 #          echo sql_host_db=${{ secrets.SQL_HOST_DB}} >> .env
 #          cat .env
   build:
-    needs: create_env
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
