@@ -75,6 +75,7 @@ jobs:
           cat .env
           if [[ ! -f ".env" ]]; then
               exit 1
+          fi
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
