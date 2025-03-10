@@ -110,7 +110,7 @@ jobs:
           path: .
 
       - name: Get branch
-        run: echo ${{ github.event_name }}
+        run: echo ${{ github.ref }}
 
       - name: Create Env
         run: | 
