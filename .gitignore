@@ -27,5 +27,4 @@ friends.db
 node_modules/
 /dist/
 
-# Web app deployment info
 .deployment
