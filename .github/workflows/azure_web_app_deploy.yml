@@ -16,24 +16,8 @@ on:
       - main
 
 jobs:
-  # Have to create the .env file that our frontend application uses
-#  create_env:
-#    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-#    runs-on: ubuntu-latest
-#    name: Create Env
-#    steps:
-#      - uses: actions/checkout@v4
-#        with:
-#          submodules: true
-#      - name: Create Env
-#        run: | 
-#          #!/bin/bash
-#          touch .env
-#          echo sql_pw=${{ secrets.SQL_PW }} >> .env
-#          echo sql_user=${{ secrets.SQL_USER }} >> .env
-#          echo sql_host_db=${{ secrets.SQL_HOST_DB}} >> .env
-#          cat .env
   build:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
