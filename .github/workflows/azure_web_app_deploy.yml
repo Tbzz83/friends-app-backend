@@ -108,6 +108,9 @@ jobs:
           name: python-app
           path: .
 
+      - name: Get branch
+        run: echo ${{ github.event_name }}
+
       - name: Create Env
         run: | 
           #!/bin/bash
@@ -125,6 +128,7 @@ jobs:
           if [[ ! -f ".env" ]]; then
               exit 1
           fi
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
