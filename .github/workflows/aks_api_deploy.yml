@@ -63,3 +63,4 @@ jobs:
             --set dockerConfigJson.data="\{\"auths\":\{\"${{ secrets.AZURE_URL }}\":\{\"username\":\"${{ secrets.ACR_USERNAME }}\"\,\"password\":\"${{ secrets.ACR_PASSWORD }}\"\}\}\}"
 
 
+
