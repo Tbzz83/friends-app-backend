@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Namespace }}
   namespace: {{ .Release.Namespace }}
 spec:
-  type: LoadBalancer
+  type: LoadBalancer # Have to keep for test purposes without ingress controller
   selector:
     app: {{ .Release.Namespace }}
   ports:
