@@ -4,8 +4,9 @@ metadata:
   name: {{ .Release.Namespace }}
   namespace: {{ .Release.Namespace }}
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: {{ .Release.Namespace }}
   ports:
     - port: {{ .Values.containerPort }}
+      targetPort: {{ .Values.containerPort }}
