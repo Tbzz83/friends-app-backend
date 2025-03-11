@@ -5,9 +5,27 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from dotenv import dotenv_values
 import os
+import sys
 
 # GLOBALS 
 CONFIG = dotenv_values(".env")
+
+# Check if CONFIG file exists
+if not CONFIG:
+  print(".env doesn't exist. Creating...")
+
+  # IF CONFIG doesn't exist, create a map and use os.getenv() to pull
+  # environment variables. 
+  CONFIG = {
+    "sql_host_db" : os.getenv("SQL_HOST_DB"),
+    "sql_pw" : os.getenv("SQL_PW"),
+    "sql_user" : os.getenv("SQL_USER")}
+
+  # If it STILL doesn't exist, exit.
+  for values in CONFIG.values():
+    if not values:
+      print("No matching environment variables found.")
+      sys.exit(1)
 
 app = Flask(__name__)
 
@@ -44,6 +62,10 @@ import routes
 
 with app.app_context():
   db.create_all()
+
+
+  
+
 
 if __name__ == "__main__":
   host = os.getenv("FLASK_RUN_HOST", "0.0.0.0")

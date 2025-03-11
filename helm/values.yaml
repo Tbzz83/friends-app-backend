@@ -1,0 +1,3 @@
+containerPort: 5000
+dockerConfigJson:
+  secretName: dockerconfigjson
