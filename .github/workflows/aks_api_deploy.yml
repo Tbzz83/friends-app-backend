@@ -1,0 +1,65 @@
+name: Build and Push to ACR
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    name: 'Build and Push to ACR'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.AZURE_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push to ACR
+        run: |
+          docker build . -t ${{ secrets.AZURE_URL }}/${{ github.event.repository.name }}-${{ github.ref_name }}:${{ github.sha }}
+          docker push ${{ secrets.AZURE_URL }}/${{ github.event.repository.name }}-${{ github.ref_name }}:${{ github.sha }}
+
+  deploy:
+      name: 'Deploy to AKS Cluster'
+      runs-on: ubuntu-22.04
+      needs: build
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Install Helm
+          uses: azure/setup-helm@v4
+
+        - name: Configure Kubeconfig
+          uses: azure/k8s-set-context@v4
+          with:
+            method: kubeconfig
+            kubeconfig: ${{ secrets.KUBECONFIG }}
+
+        - name: Deploy the Helm chart
+          run: |
+            helm upgrade \
+            ${{ github.event.repository.name }} \
+            helm \
+            --install \
+            --create-namespace \
+            --namespace ${{ github.event.repository.name }}-${{ github.ref_name }} \
+            --set image=${{ secrets.AZURE_URL }}/${{ github.event.repository.name }}-${{ github.ref_name }}:${{ github.sha }} \
+            --set dockerConfigJson.data="\{\"auths\":\{\"${{ secrets.AZURE_URL }}\":\{\"username\":\"${{ secrets.ACR_USERNAME }}\"\,\"password\":\"${{ secrets.ACR_PASSWORD }}\"\}\}\}"
+
+

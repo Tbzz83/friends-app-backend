@@ -1,0 +1,3 @@
+apiVersion: v2
+name: friends-app-backend
+version: 1.0.0
